@@ -1,5 +1,5 @@
 # My Service Test
-This package is for checking behavior of service serve/client with composed node.
+This package is for checking behavior of service serve/client with composable node.
 
 
 ## Run
