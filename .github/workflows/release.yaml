@@ -56,6 +56,16 @@ jobs:
             ${{ steps.get_current_version.outputs.current_version }} \
             -> \
             ${{ steps.bump_version.outputs.next-version }}"
+      - name: Create Pull Request
+        run: |
+          gh pr create \
+          --title \
+            "${{ steps.get_current_version.outputs.current_version }} \
+            -> \
+            ${{ steps.bump_version.outputs.next-version }}" \
+          --base main \
+          --head release/${{ steps.bump_version.outputs.next-version }} \
+          -b ""
       - name: Create release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
