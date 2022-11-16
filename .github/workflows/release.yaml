@@ -14,14 +14,13 @@ on:
         type: string
         required: true
         description: Patch version number
-env:
-  TARGET_VERSION: ${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TARGET_VERSION: ${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -34,5 +33,5 @@ jobs:
           --value ${{ env.TARGET_VERSION }} {}
       - name: Create release
         run: |
-          gh release create v{{ env.TARGET_VERSION }} -d -p --generate-notes
-          gh release v{{ env.TARGET_VERSION }}
+          gh release create v${{ env.TARGET_VERSION }} -d -p --generate-notes
+          gh release v${{ env.TARGET_VERSION }}
