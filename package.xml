@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>my_service_test</name>
-  <version>0.0.3</version>
+  <version>0.1.0</version>
   <description>ROS2 my service test package.</description>
   <maintainer email="m12watanabe1a@gmail.com">m12watanabe1a</maintainer>
   <license>Apache license 2.0</license>
