@@ -16,11 +16,11 @@ jobs:
     if: |
       github.repository_owner == github.triggering_actor
     steps:
-      - name: checkout
-        uses: actions/checkout@v3
       - name: Install dependencies
         run: |
           sudo apt-get update && sudo apt-get install xmlstarlet
+      - name: checkout
+        uses: actions/checkout@v3
       - name: Get current version
         id: get_current_version
         run: |
@@ -35,9 +35,6 @@ jobs:
         with:
           current-version: ${{ steps.get_current_version.outputs.current_version }}
           version-fragment: ${{ github.event.inputs.fragment }}
-      - name: Show
-        run: |
-          echo
       - name: Update package version
         run: |
           find . -type f -name package.xml | \
