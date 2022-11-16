@@ -68,7 +68,7 @@ jobs:
             ${{ steps.bump_version.outputs.next-version }}" \
           --base main \
           --head release/${{ steps.bump_version.outputs.next-version }} \
-          -b "Upgrade version has been upgraded from \
+          -b "The version has been upgraded from \
           ${{ steps.get_current_version.outputs.current_version }} \
           -> \
           ${{ steps.bump_version.outputs.next-version }}
