@@ -1,4 +1,4 @@
-name: Run build
+name: Release
 on:
   workflow_dispatch:
     inputs:
@@ -15,18 +15,35 @@ on:
         required: true
         description: Patch version number
 env:
-  TARGET_VERSION: v${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
+  TARGET_VERSION: ${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
 jobs:
   version_update:
     runs-on: ubuntu-latest
     name: Version Update
     steps:
-      - run: |
-          echo "${{ env.TARGET_VERSION }}"
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install xmlstarlet
+      - uses: actions/checkout@v3
+      - name: Update package version
+          find . -type f -name package.xml | \
+          xargs -n 1 -I {} \
+          xmlstarlet edit --inplace --pf \
+          --update "//package/version" \
+          --value ${{ env.TARGET_VERSION }} {}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-${{ env.TARGET_VERSION }}
   release:
-    runs-on: ubuntu-latest
     name: Release
+    runs-on: ubuntu-latest
     needs: version_update
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
-      - run: |
-          echo "${{ env.TARGET_VERSION }}"
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+      - name: Create release
+        run: |
+          gh release create v{{ env.TARGET_VERSION }} -d -p --generate-notes
+          gh release v{{ env.TARGET_VERSION }}
