@@ -2,18 +2,13 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      major:
-        type: string
-        required: true
-        description: Major version number
-      minor:
-        type: string
-        required: true
-        description: Minor version number
-      patch:
-        type: string
-        required: true
-        description: Patch version number
+      choice:
+        type: choice
+        description: Semantic version target
+        options:
+          - major
+          - feature
+          - bug
 jobs:
   release:
     name: Release
@@ -24,14 +19,24 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
+      - name: Get current version
+        id: get_current_version
+        run: |
+          current_version=`\
+            find . -name "package.xml" -print -quit \
+            | xargs -n 1 -I{} \
+            xmlstarlet select --template --value-of "//package/version" {}`
+          echo "current_version=$current_version" >> $GITHUB_OUTPUT
+      - name: Show
+        run: |
+          echo ${{ steps.get_current_version.outputs.current_version }}
       - name: Update package version
         run: |
-          find src -type f -name package.xml | \
+          find . -type f -name package.xml | \
           xargs -n 1 -I {} \
           xmlstarlet edit --inplace --pf \
           --update "//package/version" \
           --value ${{ env.TARGET_VERSION }} {}
-          cat ./package.xml
       - name: Create release
         run: |
           gh release create v${{ env.TARGET_VERSION }} -d -p --generate-notes
