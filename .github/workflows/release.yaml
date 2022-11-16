@@ -1,0 +1,32 @@
+name: Run build
+on:
+  workflow_dispatch:
+    inputs:
+      major:
+        type: string
+        required: true
+        description: Major version number
+      minor:
+        type: string
+        required: true
+        description: Minor version number
+      patch:
+        type: string
+        required: true
+        description: Patch version number
+env:
+  TARGET_VERSION: v${{ github.event.input.major }}${{ github.event.input.minor }}${{github.event.input.minor }}
+jobs:
+  version_update:
+    runs-on: ubuntu-latest
+    name: Version Update to $TARGET_VERSION
+    steps:
+      - run: |
+          echo $TARGET_VERSION
+  release:
+    runs-on: ubuntu-latest
+    name: Release
+    needs: version_update
+    steps:
+      - run: |
+          echo $TARGET_VERSION
