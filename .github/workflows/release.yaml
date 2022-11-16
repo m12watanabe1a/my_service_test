@@ -15,18 +15,18 @@ on:
         required: true
         description: Patch version number
 env:
-  TARGET_VERSION: v${{ github.event.input.major }}${{ github.event.input.minor }}${{github.event.input.minor }}
+  TARGET_VERSION: v${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
 jobs:
   version_update:
     runs-on: ubuntu-latest
-    name: Version Update to $TARGET_VERSION
+    name: Version Update to ${{ env.TARGET_VERSION }}
     steps:
       - run: |
-          echo $TARGET_VERSION
+          echo "${{ env.TARGET_VERSION }}"
   release:
     runs-on: ubuntu-latest
     name: Release
     needs: version_update
     steps:
       - run: |
-          echo $TARGET_VERSION
+          echo "${{ env.TARGET_VERSION }}"
