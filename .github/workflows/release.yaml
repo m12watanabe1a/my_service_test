@@ -25,9 +25,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install xmlstarlet
       - name: checkout
         uses: actions/checkout@v3
+        with:
+          path: src
       - name: Update package version
         run: |
-          find . -type f -name package.xml | \
+          find src -type f -name package.xml | \
           xargs -n 1 -I {} \
           xmlstarlet edit --inplace --pf \
           --update "//package/version" \
@@ -36,6 +38,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-${{ env.TARGET_VERSION }}
+          path: src
   release:
     name: Release
     runs-on: ubuntu-latest
