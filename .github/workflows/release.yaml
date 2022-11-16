@@ -19,7 +19,7 @@ env:
 jobs:
   version_update:
     runs-on: ubuntu-latest
-    name: Version Update to ${{ env.TARGET_VERSION }}
+    name: Version Update
     steps:
       - run: |
           echo "${{ env.TARGET_VERSION }}"
