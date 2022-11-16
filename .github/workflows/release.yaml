@@ -34,4 +34,4 @@ jobs:
       - name: Create release
         run: |
           gh release create v${{ env.TARGET_VERSION }} -d -p --generate-notes
-          gh release v${{ env.TARGET_VERSION }}
+          gh release upload v${{ env.TARGET_VERSION }}
