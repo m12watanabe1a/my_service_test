@@ -13,8 +13,6 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    if: |
-      github.repository_owner == github.triggering_actor
     steps:
       - name: Install dependencies
         run: |
