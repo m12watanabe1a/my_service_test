@@ -13,6 +13,8 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    if: |
+      github.repository_owner == github.triggering_actor
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -45,7 +47,7 @@ jobs:
             --value ${{ steps.bump_version.outputs.next-version }} {}
       - name: Commit change
         env:
-          user_name: m12watanabe1a
+          user_name: ${{ github.repository_owner }}
           user_email: 40206149+m12watanabe1a@users.noreply.github.com
         run: |
           git config --local user.name ${{ env.user_name }}
