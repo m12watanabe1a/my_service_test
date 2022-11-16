@@ -68,7 +68,12 @@ jobs:
             ${{ steps.bump_version.outputs.next-version }}" \
           --base main \
           --head release/${{ steps.bump_version.outputs.next-version }} \
-          -b ""
+          -b "Upgrade version has been upgraded from \
+          ${{ steps.get_current_version.outputs.current_version }} \
+          -> \
+          ${{ steps.bump_version.outputs.next-version }}\n
+          Check the release page: ${{ github.server_url }}/${{ github.repository }}/releases
+          "
       - name: Create release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
