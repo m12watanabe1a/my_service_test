@@ -71,7 +71,7 @@ jobs:
           -b "Upgrade version has been upgraded from \
           ${{ steps.get_current_version.outputs.current_version }} \
           -> \
-          ${{ steps.bump_version.outputs.next-version }}\n
+          ${{ steps.bump_version.outputs.next-version }}
           Check the release page: ${{ github.server_url }}/${{ github.repository }}/releases
           "
       - name: Create release
