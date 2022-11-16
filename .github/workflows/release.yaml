@@ -2,20 +2,19 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      choice:
+      fragment:
         type: choice
         description: Semantic version target
         options:
-          - major
-          - feature
           - bug
+          - feature
+          - major
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      TARGET_VERSION: ${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -30,16 +29,24 @@ jobs:
             | xargs -n 1 -I{} \
             xmlstarlet select --template --value-of "//package/version" {}`
           echo "current_version=$current_version" >> $GITHUB_OUTPUT
+      - name: Bump release version
+        id: bump_version
+        uses: christian-draeger/increment-semantic-version@1.0.3
+        with:
+          current-version: ${{ steps.get_current_version.outputs.current_version }}
+          version-fragment: ${{ github.event.inputs.fragment }}
       - name: Show
         run: |
-          echo ${{ steps.get_current_version.outputs.current_version }}
+          echo
       - name: Update package version
         run: |
           find . -type f -name package.xml | \
-          xargs -n 1 -I {} \
-          xmlstarlet edit --inplace --pf \
-          --update "//package/version" \
-          --value ${{ env.TARGET_VERSION }} {}
+            xargs -n 1 -I {} \
+            xmlstarlet edit --inplace --pf \
+            --update "//package/version" \
+            --value ${{ steps.bump_version.outputs.next-version }} {}
       - name: Create release
         run: |
-          gh release create v${{ env.TARGET_VERSION }} -d -p --generate-notes
+          gh release create \
+            v${{ steps.bump_version.outputs.next-version }} \
+            -d -p --generate-notes
