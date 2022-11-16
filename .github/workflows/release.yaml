@@ -31,7 +31,7 @@ jobs:
           xmlstarlet edit --inplace --pf \
           --update "//package/version" \
           --value ${{ env.TARGET_VERSION }} {}
+          cat ./package.xml
       - name: Create release
         run: |
           gh release create v${{ env.TARGET_VERSION }} -d -p --generate-notes
-          gh release upload v${{ env.TARGET_VERSION }}
