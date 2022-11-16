@@ -57,6 +57,8 @@ jobs:
             -> \
             ${{ steps.bump_version.outputs.next-version }}"
       - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create \
           --title \
