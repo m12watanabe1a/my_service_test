@@ -65,7 +65,8 @@ jobs:
         run: |
           gh pr create \
           --title \
-            "${{ steps.get_current_version.outputs.current_version }} \
+            "Release ${{ github.event.inputs.fragment }} upgrade \
+            ${{ steps.get_current_version.outputs.current_version }} \
             -> \
             ${{ steps.bump_version.outputs.next-version }}" \
           --base main \
