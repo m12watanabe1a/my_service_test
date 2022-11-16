@@ -2,8 +2,9 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "rclcpp",
     "m12watanabe1a",
-    "srvs"
+    "rclcpp",
+    "srvs",
+    "xmlstarlet"
   ]
 }
