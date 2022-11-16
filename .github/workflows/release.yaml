@@ -17,16 +17,14 @@ on:
 env:
   TARGET_VERSION: ${{ github.event.inputs.major }}.${{ github.event.inputs.minor }}.${{ github.event.inputs.patch }}
 jobs:
-  version_update:
+  release:
+    name: Release
     runs-on: ubuntu-latest
-    name: Version Update
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
     steps:
-      - name: Install Dependencies
-        run: sudo apt-get update && sudo apt-get install xmlstarlet
       - name: checkout
         uses: actions/checkout@v3
-        with:
-          path: src
       - name: Update package version
         run: |
           find src -type f -name package.xml | \
@@ -34,20 +32,6 @@ jobs:
           xmlstarlet edit --inplace --pf \
           --update "//package/version" \
           --value ${{ env.TARGET_VERSION }} {}
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: release-${{ env.TARGET_VERSION }}
-          path: src
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    needs: version_update
-    env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
       - name: Create release
         run: |
           gh release create v{{ env.TARGET_VERSION }} -d -p --generate-notes
